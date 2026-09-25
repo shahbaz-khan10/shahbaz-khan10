@@ -1,6 +1,6 @@
 <div align="center">
 
-⚡ AYAAN — AI & BACKEND DEVELOPER ⚡
+⚡ Shahbaz Khan — AI & BACKEND DEVELOPER ⚡
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=27&pause=900&center=true&vCenter=true&width=850&lines=🐍+Python+Developer;🤖+AI+%26+LLM+Explorer;⚡+Django+%7C+FastAPI+Backend+Developer;🐳+Docker+%7C+Linux+%7C+Git;🚀+Building+Real-World+Projects;💻+Eat+%E2%86%92+Code+%E2%86%92+Build+%E2%86%92+Repeat" alt="Typing SVG" />
 
