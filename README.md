@@ -1,139 +1,144 @@
-<div align="center">
+# FCT Garments ERP — Phase 1: AMS
 
-<img src="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUycWs2YXN2ZGplYzkxNWl6YXl0N3ozOTVkbmN3YmpzbXh4aDhsc2ZodCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/GghGKaZ8JeHJx0apQC/giphy.gif" width="330" alt="Animated coder typing on keyboard"/>
+Auth & Admin Management System (AMS) for a single-factory garments ERP. Provides the central
+identity service, RBAC, audit trail and all business master data that later modules
+(merchandising, planning, stores, cutting, sewing, quality) will build on.
 
-👨‍💻 Shahbaz Khan
+Built from scratch for this factory — deliberately **not** multi-tenant. It follows the
+conventions of the legacy ERP-2.0 codebase (auth-service pattern, `seed-on-boot`,
+compose profiles, Makefile) but re-implements them for a hardcoded single tenant so that
+`employees`, `roles`, `permissions` and `audit` stay simple.
 
-🐍 Python Developer • Backend Engineer • AI & Full-Stack Developer
+```
+┌──────────────┐     http /api/* (JWT Bearer)      ┌──────────────────────────────┐
+│  Next.js APP │ ────────────────────────────────► │  Django + django-ninja       │
+│  (AMS UI)    │      /.well-known/jwks.json ◄──── │  AUTH · Rbac · Audit · EPM   │
+└──────────────┘                                   └──────────┬───────────────────┘
+                                                              │ SQLite (dev) / Postgres
+                                                              ▼
+                                                    ┌──────────────────────┐
+                                                    │ employees · masters  │
+                                                    └──────────────────────┘
+```
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=24&duration=2800&pause=800&center=true&vCenter=true&width=800&lines=Python+Developer+%F0%9F%90%8D;Django+%26+FastAPI+Backend+Developer;AI+%7C+Machine+Learning+%7C+RAG;Next.js+%7C+React+%7C+TypeScript;Docker+%7C+Git+%7C+Linux;Turning+Ideas+Into+Real+Software+%F0%9F%9A%80" />
+## What's included
 
-</div>
+- **Identity**: username/email + password login (sliding-window rate limit, account lockout),
+  RS256 JWT with refresh-token rotation, server-side refresh/hash + blacklist, JWKS at
+  `/.well-known/jwks.json`, change/reset password, `POST /api/auth/logout`.
+- **RBAC**: `Service → Permission (module.entity.action)` catalog, roles, role→permission
+  matrix, user→role assignment, codes like `ams.item.approve`. Super Admin users bypass.
+- **Audit**: every create/update/delete (soft) on domain tables + login/logout/password
+  events are written to `AuditLog` with actor + client IP, viewable at `GET /api/audit/logs`.
+- **Organization**: company profile, departments, designations, production lines, employees.
+- **Business masters**: currencies + exchange rates, buyers, suppliers, item categories,
+  items, units of measure + conversions, colors, sizes + size groups, warehouses.
+- **UI**: Next.js App Router dashboard with the full list of master screens, generic CRUD
+  tables, permission-gated navigation/actions, roles permission-matrix editor, audit viewer.
+- **Deploy**: Docker images + compose profiles, Makefile, seeds, 33 pytest tests.
 
-⚡ Developer Profile
+## Repo layout
 
-class ShahbazKhan:
-    def __init__(self):
-        self.role = "Python | Backend | AI Developer"
-        self.location = "Karachi, Pakistan"
-        self.languages = ["Python", "JavaScript", "TypeScript"]
-        self.backend = ["Django", "FastAPI", "Flask", "REST APIs"]
-        self.frontend = ["React", "Next.js", "Tailwind CSS"]
-        self.devops = ["Docker", "Git", "GitHub", "Linux"]
-        self.ai = ["Machine Learning", "RAG", "LLMs", "AI Agents"]
+```
+auth-service/Backend/
+  Dockerfile, requirements.txt
+  src/
+    manage.py, pytest.ini
+    core/        settings, Ninja API wiring, URLs
+    common/      base models, pagination, CRUD-router factory
+    authentication/  User, JWT utils, JWKS, rate limit, login API
+    permissions/ Service, Permission, Role (+ API + RBAC + seeds)
+    employees/   CompanyProfile, Department, Designation, ProductionLine, Employee (+ API)
+    masters/     Currency, Buyer, Item, ... 15 master models (+ API)
+    audit/       AuditLog, middleware, signals, viewer
+    tests/       pytest suite (auth, rbac, crud, audit)
+ams/frontend/    Next.js 14 + Tailwind + TypeScript
+infra/           docker-compose.yml (profiles: infra / app)
+Makefile         shortcuts for setup, run, test, docker
+```
 
-    def mission(self):
-        return "Build scalable software and intelligent AI products 🚀"
+## Quickstart
 
-🐍 Python & Backend Development
+### Local (fastest — SQLite)
 
-<div align="center">
-<img src="https://skillicons.dev/icons?i=python,django,fastapi,flask,postgres,mysql,docker,linux,git,github,vscode" />
-</div>
+Requirements: Python 3.12, Node 20.
 
-<br>
+```bash
+# backend
+make backend-install            # or: python -m venv auth-service/Backend/.venv && pip install -r auth-service/Backend/requirements.txt
+make backend-migrate
+make backend-seed               # creates super admin: admin / SuperAdmin@123 (env-overridable)
+make backend-run                # http://127.0.0.1:8000  — API docs at /api/docs/
 
-<div align="center">
+# frontend (new terminal)
+make frontend-install
+make frontend-dev               # http://127.0.0.1:3000
+```
 
-Python • OOP • Django • FastAPI • Flask • REST APIs
-PostgreSQL • MySQL • Docker • Git • Linux
+Open http://127.0.0.1:3000, sign in as `admin` / `SuperAdmin@123`.
 
-</div>
+### Docker (Postgres + Redis)
 
-🧰 Full Technology Stack
+```bash
+docker compose -f infra/docker-compose.yml --profile app up -d --build   # full stack
+docker compose -f infra/docker-compose.yml --profile infra up -d         # infra only (hybrid dev)
+docker compose -f infra/docker-compose.yml --profile app logs -f
+```
 
-<div align="center">
-<img src="https://skillicons.dev/icons?i=python,django,fastapi,flask,js,ts,react,nextjs,html,css,tailwind,nodejs,postgres,mysql,docker,git,github,linux,vscode" />
-</div>
+`backend-setup` runs migrate + all three seeds automatically on first start.
 
-<br>
+## Configuration (backend)
 
-Area
+| Env var | Default | Purpose |
+| --- | --- | --- |
+| `DEBUG` | `false` | Django debug |
+| `SECRET_KEY` | dev key | Django secret (set in prod) |
+| `USE_SQLITE` / `DATABASE_URL` | SQLite | `postgres://user:pass@host:5432/db` for Postgres |
+| `REDIS_URL` | in-process | Optional Redis for rate limit/cache |
+| `ACCESS_TOKEN_EXPIRY_HOURS` / `REFRESH_TOKEN_EXPIRY_DAYS` | 1 / 7 | Token lifetimes |
+| `JWT_PRIVATE_KEY_PATH` / `JWT_PUBLIC_KEY_PATH` | in-memory keypair | RS256 key files (persist in prod) |
+| `SUPER_ADMIN_USERNAME` / `SUPER_ADMIN_PASSWORD` / `SUPER_ADMIN_EMAIL` | admin / SuperAdmin@123 | Seed credentials |
+| `CORS_ALLOW_ALL_ORIGINS` | true | Dev convenience |
 
-Technologies
+Frontend: `API_BASE_URL` (default `http://127.0.0.1:8000/api`). Tokens are kept in httpOnly
+cookies; the app refreshes them automatically via `/auth/refresh`.
 
-🐍 Backend
+## API map (all under `/api`)
 
-Python, Django, FastAPI, Flask, REST APIs
+| Path | What |
+| --- | --- |
+| `POST /auth/login` · `/refresh` · `/logout` · `/change-password` · `/reset-password`, `GET /auth/me` | identity |
+| `GET /services`, `GET /permissions` | permission catalog |
+| `GET/POST/PATCH/DELETE /users` · `/roles`, `PUT /roles/{id}/permissions`, `POST /users/{id}/roles` | users & roles |
+| `GET/POST/PATCH/DELETE /departments` · `/designations` · `/production-lines` · `/employees` | org |
+| `GET/POST/PATCH/DELETE /buyers` · `/suppliers` · `/item-categories` · `/items` · `/units-of-measure` · `/uom-conversions` · `/colors` · `/sizes` · `/size-groups` · `/currencies` · `/exchange-rates` · `/warehouses` | business masters |
+| `GET /audit/logs`, `GET/PUT /company` | audit + company profile |
+| `/.well-known/jwks.json` | JWKS (for microservice JWT verification) |
 
-🎨 Frontend
+List endpoints support `page`, `page_size`, `search`, plus FK / boolean filters.
+Every master follows `create / view / edit / delete (+ approve)` gated by `ams.<entity>.<action>`.
 
-Next.js, React, JavaScript, TypeScript, Tailwind
+## Permissions & roles
 
-🤖 AI
+Seeded catalog: `ams.*` services with 78 permissions (`view/ create/ edit/ delete` per master,
+plus `item.approve`, `role.manage`, `company_profile.edit`). Seeds ship 10 roles:
+Super Admin, Admin, Merchandiser, Store Keeper, Production Manager, Line Supervisor,
+QC Inspector, HR Officer, Accountant, Viewer. Adjust them in
+`permissions/management/commands/seed_catalog.py` then re-run `make backend-seed`.
 
-Machine Learning, LLMs, RAG, AI Agents
+## Tests
 
-🗄️ Database
+```bash
+make backend-test     # 33 tests: auth flows, RBAC enforcement, CRUD soft-delete, audit trail
+```
 
-PostgreSQL, MySQL, Vector Databases
+## Roadmap
 
-⚙️ DevOps
+1. **Phase 2 – Merchandising (MMS)**: buyers, style/order development, BOMs.
+2. **Phase 3 – Planning & Scheduling (PMS)**: production orders, line loading, capacity.
+3. **Phase 4 – Stores/Inventory**: GRN, issues, stock, WMS.
+4. **Phase 5 – Cutting/Sewing/Finishing data capture + QMS**.
 
-Docker, Git, GitHub, Linux
-
-🏆 GitHub Trophies
-
-<div align="center">
-<img src="https://github-profile-trophy.vercel.app/?username=shahbaz-khan10&theme=algolia&no-frame=true&no-bg=true&margin-w=8&margin-h=8&column=7"/>
-</div>
-
-📊 GitHub Analytics
-
-<div align="center">
-<img height="180" src="https://github-readme-stats.vercel.app/api?username=shahbaz-khan10&show_icons=true&theme=github_dark&hide_border=true&include_all_commits=true&count_private=true"/>
-<img height="180" src="https://github-readme-stats.vercel.app/api/top-langs/?username=shahbaz-khan10&layout=compact&langs_count=8&theme=github_dark&hide_border=true"/>
-</div>
-
-<br>
-
-<div align="center">
-<img src="https://streak-stats.demolab.com?user=shahbaz-khan10&theme=github-dark-blue&hide_border=true"/>
-</div>
-
-📈 Contribution Activity
-
-<div align="center">
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=shahbaz-khan10&theme=github-compact&hide_border=true&area=true" width="98%"/>
-</div>
-
-🚀 Featured Projects
-
-🤖 AI Growth Platform
-
-AI chatbot, lead research and automated outreach platform.
-Python • FastAPI • Next.js • AI
-
-❤️ NGO Management Platform
-
-Full-stack NGO system for donations, beneficiaries, users, transparency and dashboards.
-Django • React • REST APIs
-
-📞 Call Center CRM
-
-Outbound CRM with customer records, call logs, notes and supervisor workflows.
-Backend • APIs • CRM
-
-📄 AI CV Filter
-
-AI-assisted candidate screening based on CV skills and job requirements.
-Python • AI • Automation
-
-🎯 Currently Focusing On
-
-<div align="center">
-
-🐍 Advanced Python • ⚡ FastAPI • 🎯 Django • 🤖 Artificial Intelligence
-🧠 RAG & AI Agents • 🐳 Docker • ☁️ Deployment • 🏗️ Scalable Backend Systems
-
-</div>
-
-<div align="center">
-
-💻 while alive: learn(); build(); improve()
-
-Building software today. Building intelligence for tomorrow. 🚀
-
-⭐ Shahbaz Khan
-
-</div>
+New modules follow the same pattern: a `Service` row, a permission catalog for their entities
+in `seed_catalog.py`, a Django app with `models.py` + `api.py` (via `make_crud_router`), and
+frontend screens via the generic `Table`/`MasterScreen` components.

@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+db.sqlite3
+*.sqlite3
+staticfiles/
+.pytest_cache/
+*.log
+
+# Frontend
+ams/frontend/node_modules/
+ams/frontend/.next/
+ams/frontend/out/
+
+# Env / keys
+.env
+.env.*
+!env.example
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
