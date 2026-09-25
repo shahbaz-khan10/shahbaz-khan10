@@ -1,144 +1,195 @@
-# FCT Garments ERP — Phase 1: AMS
+# 👋 Hey, I'm Ayaan
 
-Auth & Admin Management System (AMS) for a single-factory garments ERP. Provides the central
-identity service, RBAC, audit trail and all business master data that later modules
-(merchandising, planning, stores, cutting, sewing, quality) will build on.
+<div align="center">
 
-Built from scratch for this factory — deliberately **not** multi-tenant. It follows the
-conventions of the legacy ERP-2.0 codebase (auth-service pattern, `seed-on-boot`,
-compose profiles, Makefile) but re-implements them for a hardcoded single tenant so that
-`employees`, `roles`, `permissions` and `audit` stay simple.
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=25&pause=1000&color=36BCF7&center=true&vCenter=true&width=650&lines=AI+%26+Backend+Developer;Python+%7C+Django+%7C+FastAPI;Next.js+%7C+React+%7C+Docker;Building+AI+Agents+%26+Real-World+Systems;Always+Learning+Something+New..." />
 
-```
-┌──────────────┐     http /api/* (JWT Bearer)      ┌──────────────────────────────┐
-│  Next.js APP │ ────────────────────────────────► │  Django + django-ninja       │
-│  (AMS UI)    │      /.well-known/jwks.json ◄──── │  AUTH · Rbac · Audit · EPM   │
-└──────────────┘                                   └──────────┬───────────────────┘
-                                                              │ SQLite (dev) / Postgres
-                                                              ▼
-                                                    ┌──────────────────────┐
-                                                    │ employees · masters  │
-                                                    └──────────────────────┘
-```
+<br/>
 
-## What's included
+### 🧢 Developer Mode: ON
 
-- **Identity**: username/email + password login (sliding-window rate limit, account lockout),
-  RS256 JWT with refresh-token rotation, server-side refresh/hash + blacklist, JWKS at
-  `/.well-known/jwks.json`, change/reset password, `POST /api/auth/logout`.
-- **RBAC**: `Service → Permission (module.entity.action)` catalog, roles, role→permission
-  matrix, user→role assignment, codes like `ams.item.approve`. Super Admin users bypass.
-- **Audit**: every create/update/delete (soft) on domain tables + login/logout/password
-  events are written to `AuditLog` with actor + client IP, viewable at `GET /api/audit/logs`.
-- **Organization**: company profile, departments, designations, production lines, employees.
-- **Business masters**: currencies + exchange rates, buyers, suppliers, item categories,
-  items, units of measure + conversions, colors, sizes + size groups, warehouses.
-- **UI**: Next.js App Router dashboard with the full list of master screens, generic CRUD
-  tables, permission-gated navigation/actions, roles permission-matrix editor, audit viewer.
-- **Deploy**: Docker images + compose profiles, Makefile, seeds, 33 pytest tests.
+<!-- Replace this with your custom cap-wearing coder GIF when uploaded -->
 
-## Repo layout
+<img width="500" src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" />
 
-```
-auth-service/Backend/
-  Dockerfile, requirements.txt
-  src/
-    manage.py, pytest.ini
-    core/        settings, Ninja API wiring, URLs
-    common/      base models, pagination, CRUD-router factory
-    authentication/  User, JWT utils, JWKS, rate limit, login API
-    permissions/ Service, Permission, Role (+ API + RBAC + seeds)
-    employees/   CompanyProfile, Department, Designation, ProductionLine, Employee (+ API)
-    masters/     Currency, Buyer, Item, ... 15 master models (+ API)
-    audit/       AuditLog, middleware, signals, viewer
-    tests/       pytest suite (auth, rbac, crud, audit)
-ams/frontend/    Next.js 14 + Tailwind + TypeScript
-infra/           docker-compose.yml (profiles: infra / app)
-Makefile         shortcuts for setup, run, test, docker
-```
+</div>
 
-## Quickstart
+---
 
-### Local (fastest — SQLite)
+## 🧑‍💻 About Me
 
-Requirements: Python 3.12, Node 20.
+```python
+class Ayaan:
+    def __init__(self):
+        self.role = "AI & Backend Developer"
+        self.location = "Karachi, Pakistan 🇵🇰"
 
-```bash
-# backend
-make backend-install            # or: python -m venv auth-service/Backend/.venv && pip install -r auth-service/Backend/requirements.txt
-make backend-migrate
-make backend-seed               # creates super admin: admin / SuperAdmin@123 (env-overridable)
-make backend-run                # http://127.0.0.1:8000  — API docs at /api/docs/
+        self.languages = [
+            "Python",
+            "JavaScript",
+            "TypeScript"
+        ]
 
-# frontend (new terminal)
-make frontend-install
-make frontend-dev               # http://127.0.0.1:3000
+        self.backend = [
+            "Django",
+            "FastAPI",
+            "REST APIs"
+        ]
+
+        self.frontend = [
+            "React",
+            "Next.js",
+            "Tailwind CSS"
+        ]
+
+        self.devops = [
+            "Docker",
+            "Git",
+            "GitHub",
+            "Linux",
+            "WSL"
+        ]
+
+        self.ai = [
+            "AI Agents",
+            "LLMs",
+            "RAG",
+            "Vector Databases",
+            "Machine Learning"
+        ]
+
+    def current_mission(self):
+        return "Build → Learn → Improve → Repeat 🚀"
 ```
 
-Open http://127.0.0.1:3000, sign in as `admin` / `SuperAdmin@123`.
+---
 
-### Docker (Postgres + Redis)
+# ⚡ Tech Stack
 
-```bash
-docker compose -f infra/docker-compose.yml --profile app up -d --build   # full stack
-docker compose -f infra/docker-compose.yml --profile infra up -d         # infra only (hybrid dev)
-docker compose -f infra/docker-compose.yml --profile app logs -f
+### 🧠 AI / Machine Learning
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge\&logo=python\&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge\&logo=numpy\&logoColor=white)
+![AI](https://img.shields.io/badge/Artificial_Intelligence-000000?style=for-the-badge)
+![LLM](https://img.shields.io/badge/LLM-412991?style=for-the-badge)
+![AI Agents](https://img.shields.io/badge/AI_Agents-FF6F00?style=for-the-badge)
+
+### ⚙️ Backend
+
+![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge\&logo=django\&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge\&logo=fastapi\&logoColor=white)
+![REST API](https://img.shields.io/badge/REST_API-005571?style=for-the-badge)
+
+### 🎨 Frontend
+
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge\&logo=javascript\&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge\&logo=typescript\&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge\&logo=react\&logoColor=61DAFB)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge\&logo=nextdotjs\&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge\&logo=tailwindcss\&logoColor=white)
+
+### 🐳 DevOps & Tools
+
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge\&logo=git\&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge\&logo=github\&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge\&logo=linux\&logoColor=black)
+![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge\&logo=visualstudiocode\&logoColor=white)
+
+### 🗄️ Database & Vector DB
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge\&logo=postgresql\&logoColor=white)
+![Qdrant](https://img.shields.io/badge/Qdrant-DC244C?style=for-the-badge)
+![Database](https://img.shields.io/badge/Database-4479A1?style=for-the-badge)
+
+---
+
+# 🚀 What I'm Building
+
+🤖 **AI Growth Platform**
+AI Chatbot • Lead Research • AI Outreach Agents
+
+🏢 **ERP / HDMS Systems**
+Microservices • FastAPI • Docker • Next.js
+
+❤️ **Umeed-e-Nau Foundation Platform**
+Django • React • JWT Authentication • Donation System
+
+🛒 **B2B Marketplace**
+Next.js • Django/FastAPI • Seller System • Marketplace Architecture
+
+🔎 **AI Lead Finder**
+Web Scraping • Decision Maker Discovery • AI Automation
+
+📄 **AI CV Filter**
+CV Analysis • Job Matching • Skill Gap Detection
+
+---
+
+# 🏆 GitHub Achievements
+
+<div align="center">
+
+<img src="https://github-profile-trophy.vercel.app/?username=YOUR_GITHUB_USERNAME&theme=algolia&no-frame=true&no-bg=true&margin-w=5" />
+
+</div>
+
+---
+
+# 📊 GitHub Analytics
+
+<div align="center">
+
+<img height="170" src="https://github-readme-stats.vercel.app/api?username=YOUR_GITHUB_USERNAME&show_icons=true&theme=tokyonight&hide_border=true" />
+
+<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=YOUR_GITHUB_USERNAME&layout=compact&theme=tokyonight&hide_border=true" />
+
+</div>
+
+---
+
+# 🔥 Contribution Streak
+
+<div align="center">
+
+<img src="https://streak-stats.demolab.com?user=YOUR_GITHUB_USERNAME&theme=tokyonight&hide_border=true" />
+
+</div>
+
+---
+
+# 🐍 Contribution Snake
+
+<div align="center">
+
+![Snake animation](https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_USERNAME/output/github-contribution-grid-snake-dark.svg)
+
+</div>
+
+---
+
+# 🎯 Currently Learning
+
+```text
+████████████████░░░░ Python / Backend
+██████████████░░░░░░ Django & FastAPI
+████████████░░░░░░░░ Docker & DevOps
+██████████░░░░░░░░░░ Machine Learning
+████████░░░░░░░░░░░░ AI Agents / LLMs
 ```
 
-`backend-setup` runs migrate + all three seeds automatically on first start.
+---
 
-## Configuration (backend)
+# 💡 Developer Philosophy
 
-| Env var | Default | Purpose |
-| --- | --- | --- |
-| `DEBUG` | `false` | Django debug |
-| `SECRET_KEY` | dev key | Django secret (set in prod) |
-| `USE_SQLITE` / `DATABASE_URL` | SQLite | `postgres://user:pass@host:5432/db` for Postgres |
-| `REDIS_URL` | in-process | Optional Redis for rate limit/cache |
-| `ACCESS_TOKEN_EXPIRY_HOURS` / `REFRESH_TOKEN_EXPIRY_DAYS` | 1 / 7 | Token lifetimes |
-| `JWT_PRIVATE_KEY_PATH` / `JWT_PUBLIC_KEY_PATH` | in-memory keypair | RS256 key files (persist in prod) |
-| `SUPER_ADMIN_USERNAME` / `SUPER_ADMIN_PASSWORD` / `SUPER_ADMIN_EMAIL` | admin / SuperAdmin@123 | Seed credentials |
-| `CORS_ALLOW_ALL_ORIGINS` | true | Dev convenience |
+> **"Don't just learn code — build things that solve real problems."**
 
-Frontend: `API_BASE_URL` (default `http://127.0.0.1:8000/api`). Tokens are kept in httpOnly
-cookies; the app refreshes them automatically via `/auth/refresh`.
+<div align="center">
 
-## API map (all under `/api`)
+### ⚡ Code. Build. Break. Fix. Learn. Repeat.
 
-| Path | What |
-| --- | --- |
-| `POST /auth/login` · `/refresh` · `/logout` · `/change-password` · `/reset-password`, `GET /auth/me` | identity |
-| `GET /services`, `GET /permissions` | permission catalog |
-| `GET/POST/PATCH/DELETE /users` · `/roles`, `PUT /roles/{id}/permissions`, `POST /users/{id}/roles` | users & roles |
-| `GET/POST/PATCH/DELETE /departments` · `/designations` · `/production-lines` · `/employees` | org |
-| `GET/POST/PATCH/DELETE /buyers` · `/suppliers` · `/item-categories` · `/items` · `/units-of-measure` · `/uom-conversions` · `/colors` · `/sizes` · `/size-groups` · `/currencies` · `/exchange-rates` · `/warehouses` | business masters |
-| `GET /audit/logs`, `GET/PUT /company` | audit + company profile |
-| `/.well-known/jwks.json` | JWKS (for microservice JWT verification) |
+![Profile Views](https://komarev.com/ghpvc/?username=YOUR_GITHUB_USERNAME\&style=for-the-badge)
 
-List endpoints support `page`, `page_size`, `search`, plus FK / boolean filters.
-Every master follows `create / view / edit / delete (+ approve)` gated by `ams.<entity>.<action>`.
+⭐ **Thanks for visiting my profile!**
 
-## Permissions & roles
-
-Seeded catalog: `ams.*` services with 78 permissions (`view/ create/ edit/ delete` per master,
-plus `item.approve`, `role.manage`, `company_profile.edit`). Seeds ship 10 roles:
-Super Admin, Admin, Merchandiser, Store Keeper, Production Manager, Line Supervisor,
-QC Inspector, HR Officer, Accountant, Viewer. Adjust them in
-`permissions/management/commands/seed_catalog.py` then re-run `make backend-seed`.
-
-## Tests
-
-```bash
-make backend-test     # 33 tests: auth flows, RBAC enforcement, CRUD soft-delete, audit trail
-```
-
-## Roadmap
-
-1. **Phase 2 – Merchandising (MMS)**: buyers, style/order development, BOMs.
-2. **Phase 3 – Planning & Scheduling (PMS)**: production orders, line loading, capacity.
-3. **Phase 4 – Stores/Inventory**: GRN, issues, stock, WMS.
-4. **Phase 5 – Cutting/Sewing/Finishing data capture + QMS**.
-
-New modules follow the same pattern: a `Service` row, a permission catalog for their entities
-in `seed_catalog.py`, a Django app with `models.py` + `api.py` (via `make_crud_router`), and
-frontend screens via the generic `Table`/`MasterScreen` components.
+</div>
